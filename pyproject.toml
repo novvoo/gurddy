@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gurddy"
-version = "0.1.0"
+version = "0.1.2"
 description = "Gurddy Python package."
 readme = "README.md"
 authors = [{ name = "novo", email = "novo.email@gmail.com" }]
 license = { text = "MIT" }
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
