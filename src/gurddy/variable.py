@@ -25,7 +25,10 @@ class Variable:
         return Expression(self) - Expression(other)
 
     def __mul__(self, other):
-        return Expression(self) * Expression(other)
+        if isinstance(other, (int, float)):
+            return Expression(self) * other
+        else:
+            return Expression(self) * Expression(other)
 
     def __truediv__(self, other):
         return Expression(self) / Expression(other)
@@ -47,6 +50,15 @@ class Variable:
 
     def __ne__(self, other):
         return Expression(self) != Expression(other)
+    
+    def __rmul__(self, other):
+        return self * other
+    
+    def __radd__(self, other):
+        return self + other
+    
+    def __rsub__(self, other):
+        return Expression(other) - Expression(self)
 
 
 class Expression:

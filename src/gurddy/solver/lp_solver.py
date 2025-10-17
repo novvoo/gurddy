@@ -17,13 +17,22 @@ class LPSolver:
 
         # Objective
         if self.model.objective:
-            obj_expr = pulp.lpSum([coeff * self.var_map[var.name] for var, coeff in self.model.objective.terms.items()]) + self.model.objective.constant
+            obj_terms = [coeff * self.var_map[var.name] for var, coeff in self.model.objective.terms.items()]
+            obj_expr = pulp.lpSum(obj_terms)
+            # Add constant if it's a number
+            if isinstance(self.model.objective.constant, (int, float)):
+                obj_expr += self.model.objective.constant
             self.pulp_model += obj_expr
 
         # Constraints
         for constr in self.model.constraints:
             if isinstance(constr, LinearConstraint):
-                lhs = pulp.lpSum([coeff * self.var_map[var.name] for var, coeff in constr.expr.terms.items()]) + constr.expr.constant
+                lhs_terms = [coeff * self.var_map[var.name] for var, coeff in constr.expr.terms.items()]
+                lhs = pulp.lpSum(lhs_terms)
+                # Add constant if it's a number
+                if isinstance(constr.expr.constant, (int, float)):
+                    lhs += constr.expr.constant
+                
                 if constr.sense == '<=':
                     self.pulp_model += lhs <= 0
                 elif constr.sense == '>=':

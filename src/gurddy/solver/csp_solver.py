@@ -510,7 +510,8 @@ class CSPSolver:
                 if len(constr.vars) == 2:
                     v1, v2 = constr.vars[0].name, constr.vars[1].name
                     constraints[(v1, v2)] = constr.func
-                    constraints[(v2, v1)] = lambda a, b: constr.func(b, a)  # Assume symmetric
+                    # For symmetric constraints, both directions should use the same function
+                    constraints[(v2, v1)] = constr.func
             # Skip handled LinearConstraint equalities
 
         # 邻居（无序去重、元组）

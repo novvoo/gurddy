@@ -1,6 +1,43 @@
 ### Gurddy
 Gurddy is a lightweight Python package designed to model and solve Constraint Satisfaction Problems (CSP) and Linear Programming (LP) problems with ease. Built for researchers, engineers, and optimization enthusiasts, Gurddy provides a unified interface to define variables, constraints, and objectives—then leverages powerful solvers under the hood to deliver optimal or feasible solutions.
 
+## Quick Start
+
+```python
+import gurddy
+
+# Solve 4-Queens problem
+model = gurddy.Model("4-Queens", "CSP")
+
+# Create variables (one per row, value = column)
+queens = [model.addVar(f"q{i}", domain=[0,1,2,3]) for i in range(4)]
+
+# All queens in different columns
+model.addConstraint(gurddy.AllDifferentConstraint(queens))
+
+# No two queens on same diagonal
+for i in range(4):
+    for j in range(i + 1, 4):
+        row_diff = j - i
+        diagonal_constraint = lambda c1, c2, rd=row_diff: abs(c1 - c2) != rd
+        model.addConstraint(gurddy.FunctionConstraint(diagonal_constraint, (queens[i], queens[j])))
+
+# Solve and print solution
+solution = model.solve()
+if solution:
+    for row in range(4):
+        line = ['Q' if solution[f'q{row}'] == col else '.' for col in range(4)]
+        print(' '.join(line))
+```
+
+Output:
+```
+. Q . .
+. . . Q  
+Q . . .
+. . Q .
+```
+
 Features
 - 🧩 CSP Support: Define discrete variables, domains, and logical constraints.
 - 📈 LP Support: Formulate linear objectives and inequality/equality constraints.
@@ -8,7 +45,180 @@ Features
 - 📦 Simple API: Intuitive syntax for rapid prototyping and experimentation.
 - 🧪 Type-Hinted & Tested: Robust codebase with unit tests and clear documentation.
 
+## CSP Examples
 
+### 🧩 Classic Puzzles
+
+#### **Sudoku Solver** (`optimized_csp.py`)
+- Complete 9×9 Sudoku puzzle solver
+- Demonstrates AllDifferent constraints
+- Shows mask-based optimizations for small integer domains
+- **Run**: `python examples/optimized_csp.py`
+
+#### **N-Queens Problem** (`n_queens.py`)
+- Place N queens on N×N chessboard without conflicts
+- Demonstrates custom function constraints for diagonal checks
+- Supports any board size (4×4, 8×8, etc.)
+- **Run**: `python examples/n_queens.py`
+
+#### **Logic Puzzles** (`logic_puzzles.py`)
+- Einstein's famous Zebra puzzle (5 houses, 5 attributes)
+- Simple logic puzzles for learning
+- Complex constraint modeling techniques
+- **Run**: `python examples/logic_puzzles.py`
+
+### 🎨 Graph Problems
+
+#### **Graph Coloring** (`graph_coloring.py`)
+- Color graph vertices with minimum colors
+- Includes sample graphs: Triangle, Square, Petersen, Wheel
+- Finds chromatic number automatically
+- **Run**: `python examples/graph_coloring.py`
+
+#### **Map Coloring** (`map_coloring.py`)
+- Color geographical maps (Australia, USA, Europe)
+- Demonstrates the Four Color Theorem
+- Real-world adjacency relationships
+- **Run**: `python examples/map_coloring.py`
+
+### 📅 Scheduling Problems
+
+#### **Multi-Type Scheduling** (`scheduling.py`)
+- **Course Scheduling**: University course timetabling
+- **Meeting Scheduling**: Conference room allocation
+- **Resource Scheduling**: Task-resource-time assignment
+- Complex temporal and resource constraints
+- **Run**: `python examples/scheduling.py`
+
+## LP Examples
+
+#### **Basic Linear Programming** (`optimized_lp.py`)
+- Simple LP problem demonstration
+- Shows PuLP integration
+- **Run**: `python examples/optimized_lp.py`
+
+
+## Quick Start Guide
+
+### Running All Examples
+```bash
+# Navigate to examples directory
+cd examples
+
+# Run CSP examples
+python n_queens.py
+python graph_coloring.py
+python map_coloring.py
+python scheduling.py
+python logic_puzzles.py
+python optimized_csp.py
+
+# Run LP examples
+python optimized_lp.py
+```
+
+### Example Output Preview
+
+#### N-Queens (8×8 board)
+```
+8-Queens Solution:
++---+---+---+---+---+---+---+---+
+| Q |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+|   |   |   |   | Q |   |   |   |
++---+---+---+---+---+---+---+---+
+...
+Queen positions: (0,0), (1,4), (2,7), (3,5), (4,2), (5,6), (6,1), (7,3)
+```
+
+#### Graph Coloring
+```
+Triangle: Complete graph K3 (triangle)
+Trying with 3 colors...
+Chromatic number: 3
+Vertex 0: Red
+Vertex 1: Blue  
+Vertex 2: Green
+```
+
+#### Zebra Puzzle
+```
+House 1:
+  Color       : Yellow
+  Nationality : Norwegian
+  Drink       : Water
+  Pet         : Fox
+  Cigarette   : Kools
+
+ANSWERS:
+Who owns the zebra? Japanese (House 5)
+Who drinks water? Norwegian (House 1)
+```
+
+## Problem Categories
+
+### 🔢 **Combinatorial Puzzles**
+- Sudoku, N-Queens, Logic puzzles
+- **Key Techniques**: AllDifferent constraints, custom functions
+- **Files**: `optimized_csp.py`, `n_queens.py`, `logic_puzzles.py`
+
+### 🌐 **Graph Theory Problems**  
+- Graph coloring, map coloring
+- **Key Techniques**: Binary constraints, chromatic number finding
+- **Files**: `graph_coloring.py`, `map_coloring.py`
+
+### ⏰ **Scheduling & Assignment**
+- Course scheduling, resource allocation
+- **Key Techniques**: Time-resource encoding, complex constraints
+- **Files**: `scheduling.py`
+
+### 📊 **Optimization Problems**
+- Linear programming, mixed-integer programming
+- **Key Techniques**: Objective optimization, constraint relaxation
+- **Files**: `optimized_lp.py`
+
+## Learning Path
+
+### 🟢 **Beginner** (Start Here)
+1. `optimized_csp.py` - Learn basic CSP concepts with Sudoku
+2. `n_queens.py` - Understand custom constraints
+3. `graph_coloring.py` - Explore graph problems
+
+### 🟡 **Intermediate**
+4. `map_coloring.py` - Real-world constraint modeling
+5. `scheduling.py` - Multi-constraint problems
+6. `optimized_lp.py` - Introduction to LP
+
+
+## Customization Tips
+
+### Adding New Constraints
+```python
+# Custom constraint function
+def my_constraint(val1, val2):
+    return val1 + val2 <= 10
+
+# Add to model
+model.addConstraint(FunctionConstraint(my_constraint, (var1, var2)))
+```
+
+### Performance Tuning
+```python
+# For small integer domains (1-32), force mask optimization
+solver = CSPSolver(model)
+solver.force_mask = True
+solution = solver.solve()
+```
+
+### Domain Specification
+```python
+# Different domain types
+model.addVar('binary_var', domain=[0, 1])           # Binary
+model.addVar('small_int', domain=[1,2,3,4,5])       # Small integers  
+model.addVar('large_range', domain=list(range(100))) # Large range
+```
+
+-------------------
 Installation (PyPI)
 -------------------
 
@@ -37,18 +247,19 @@ After installing from PyPI you can import the public API from the `gurddy` packa
 - Expression: arithmetic expressions are created implicitly by operations on `Variable` objects or explicitly via `Expression(variable_or_value)`.
 - Constraint types: `LinearConstraint`, `AllDifferentConstraint`, `FunctionConstraint`.
 
-Usage — CSP (example)
----------------------
+Usage — CSP Examples
+-------------------
 
-Simple CSP example (map to `CSPSolver`):
+Gurddy can solve a wide variety of Constraint Satisfaction Problems. Here are some examples:
+
+### Simple CSP Example
 
 ```python
 from gurddy.model import Model
-from gurddy.variable import Expression
 from gurddy.constraint import AllDifferentConstraint
 
 # Build CSP model
-model = Model('sudoku', problem_type='CSP')
+model = Model('simple_csp', problem_type='CSP')
 # Add discrete variables with domains (1..9)
 model.addVar('A1', domain=[1,2,3,4,5,6,7,8,9])
 model.addVar('A2', domain=[1,2,3,4,5,6,7,8,9])
@@ -61,9 +272,95 @@ solution = model.solve()
 print(solution)  # dict of variable name -> assigned int, or None if unsatisfiable
 ```
 
-Notes about CSP API
-- CSPSolver automatically builds an internal graph of constraints and will attempt mask-based optimizations when domains are small contiguous integer sets (e.g., Sudoku 1..9).
-- You can force the mask-optimized path by setting `solver.force_mask = True` after creating the solver (if you instantiate `CSPSolver` directly).
+### N-Queens Problem
+
+```python
+from gurddy.model import Model
+from gurddy.constraint import AllDifferentConstraint, FunctionConstraint
+
+def solve_n_queens(n=8):
+    model = Model(f"{n}-Queens", "CSP")
+    
+    # Variables: one for each row, value represents column position
+    queens = {}
+    for row in range(n):
+        var_name = f"queen_row_{row}"
+        queens[var_name] = model.addVar(var_name, domain=list(range(n)))
+    
+    # All queens in different columns
+    model.addConstraint(AllDifferentConstraint(list(queens.values())))
+    
+    # No two queens on same diagonal
+    def not_on_same_diagonal(col1, col2, row_diff):
+        return abs(col1 - col2) != row_diff
+    
+    queen_vars = list(queens.values())
+    for i in range(n):
+        for j in range(i + 1, n):
+            row_diff = j - i
+            constraint_func = lambda c1, c2, rd=row_diff: not_on_same_diagonal(c1, c2, rd)
+            model.addConstraint(FunctionConstraint(constraint_func, (queen_vars[i], queen_vars[j])))
+    
+    return model.solve()
+
+# Solve 8-Queens
+solution = solve_n_queens(8)
+```
+
+### Graph Coloring
+
+```python
+def solve_graph_coloring(edges, num_vertices, max_colors=4):
+    model = Model("GraphColoring", "CSP")
+    
+    # Variables: one for each vertex
+    vertices = {}
+    for v in range(num_vertices):
+        vertices[f"vertex_{v}"] = model.addVar(f"vertex_{v}", domain=list(range(max_colors)))
+    
+    # Adjacent vertices must have different colors
+    def different_colors(color1, color2):
+        return color1 != color2
+    
+    for v1, v2 in edges:
+        var1 = vertices[f"vertex_{v1}"]
+        var2 = vertices[f"vertex_{v2}"]
+        model.addConstraint(FunctionConstraint(different_colors, (var1, var2)))
+    
+    return model.solve()
+
+# Example: Color a triangle graph
+edges = [(0, 1), (1, 2), (2, 0)]
+solution = solve_graph_coloring(edges, 3, 3)
+```
+
+CSP Problem Types Supported
+---------------------------
+
+Gurddy's CSP solver can handle a wide variety of constraint satisfaction problems:
+
+### Constraint Types
+- **AllDifferentConstraint**: Global constraint ensuring all variables take distinct values
+- **FunctionConstraint**: Custom binary constraints defined by Python functions  
+- **LinearConstraint**: Equality and inequality constraints (var == value, var <= value, etc.)
+
+### Problem Categories
+- **Combinatorial Puzzles**: Sudoku, N-Queens, Logic puzzles
+- **Graph Problems**: Graph coloring, map coloring
+- **Scheduling**: Resource allocation, time slot assignment
+- **Assignment Problems**: Matching, allocation with constraints
+
+### Performance Optimizations
+- **Mask-based AC-3**: Optimized arc consistency for small integer domains (1-32)
+- **AllDifferent Propagation**: Uses maximum matching algorithms for global constraints
+- **Smart Variable Ordering**: Minimum Remaining Values (MRV) heuristic
+- **Value Ordering**: Least Constraining Value (LCV) heuristic
+- **Automatic Optimization**: CSPSolver automatically detects when to use mask optimizations
+
+### Advanced Features
+- **Backtracking with Inference**: AC-3 constraint propagation during search
+- **Multiple Constraint Types**: Mix different constraint types in the same problem
+- **Extensible**: Easy to add custom constraint types and heuristics
 
 Usage — LP / MIP (example)
 --------------------------
@@ -90,14 +387,86 @@ sol = m.solve()
 print(sol)  # dict var name -> numeric value or None
 ```
 
-Advanced LP demo
+Examples Gallery
 ----------------
-See `examples/optimized_lp.py` (simple demo) and `examples/advanced_lp.py` (LP relaxation vs MIP, timings, simple sensitivity analysis).
 
-Developer notes
+Gurddy comes with comprehensive examples demonstrating various problem types:
+
+### CSP Examples
+- **`examples/optimized_csp.py`** - Complete Sudoku solver with optimizations
+- **`examples/n_queens.py`** - N-Queens problem for any board size
+- **`examples/graph_coloring.py`** - Graph coloring with various test graphs
+- **`examples/map_coloring.py`** - Map coloring (Australia, USA, Europe)
+- **`examples/scheduling.py`** - Course and meeting scheduling problems
+- **`examples/logic_puzzles.py`** - Logic puzzles including Einstein's Zebra puzzle
+
+### LP Examples  
+- **`examples/optimized_lp.py`** - LP relaxation vs MIP, timings, sensitivity analysis
+
+### Running Examples
+
+```bash
+# CSP Examples
+python examples/n_queens.py           # N-Queens problem
+python examples/graph_coloring.py     # Graph coloring
+python examples/map_coloring.py       # Map coloring
+python examples/scheduling.py         # Scheduling problems
+python examples/logic_puzzles.py      # Logic puzzles
+python examples/optimized_csp.py      # Sudoku solver
+
+# LP Examples  
+python examples/optimized_lp.py       # Production planning
+python examples/advanced_lp.py        # Advanced LP techniques
+```
+
+Problem-Specific Examples
+------------------------
+
+### Sudoku Solver
+```python
+# Complete 9x9 Sudoku with given clues
+model = Model("Sudoku", "CSP")
+
+# Create 81 variables for 9x9 grid
+vars_dict = {}
+for row in range(1, 10):
+    for col in range(1, 10):
+        var_name = f"cell_{row}_{col}"
+        vars_dict[var_name] = model.addVar(var_name, domain=[1,2,3,4,5,6,7,8,9])
+
+# Add AllDifferent constraints for rows, columns, and 3x3 boxes
+# ... (see examples/optimized_csp.py for complete implementation)
+```
+
+### Einstein's Zebra Puzzle
+```python
+# The famous logic puzzle with 5 houses, 5 attributes each
+# Who owns the zebra and who drinks water?
+model = Model("ZebraPuzzle", "CSP")
+
+# Variables for colors, nationalities, drinks, pets, cigarettes
+# Each assigned to houses 0-4
+# ... (see examples/logic_puzzles.py for complete implementation)
+```
+
+### Course Scheduling
+```python
+# Schedule university courses avoiding conflicts
+model = Model("CourseScheduling", "CSP")
+
+courses = ['Math101', 'Physics101', 'Chemistry101', 'Biology101', 'English101']
+time_slots = list(range(20))  # 5 days × 4 slots
+
+# Variables and constraints for scheduling
+# ... (see examples/scheduling.py for complete implementation)
+```
+
+Developer Notes
 ---------------
-- The CSP code includes several internal optimizations: precomputed support masks, mask-based AC-3, and an optional AllDifferent matching propagation for small groups to strengthen pruning.
-- The LP solver uses PuLP. If you want to use another solver backend (ORTOOLS, Gurobi), you can either modify `src/gurddy/solver/lp_solver.py` to wrap that backend or add a new solver class and dispatch via `Model.solve()`.
+- **CSP Optimizations**: The CSP solver includes precomputed support masks, mask-based AC-3, and AllDifferent matching propagation for enhanced performance on small integer domains.
+- **LP Backend**: Uses PuLP by default. Can be extended to support other solvers (ORTOOLS, Gurobi) by modifying `src/gurddy/solver/lp_solver.py`.
+- **Extensibility**: Easy to add new constraint types by inheriting from the `Constraint` base class.
+- **Memory Efficiency**: Mask-based operations reduce memory usage for problems with small domains.
 
 Running tests
 -------------
@@ -175,5 +544,5 @@ Solvers
 
 Notes
 - The API intentionally keeps model construction separate from solver execution. Use `Model.solve()` for convenience or instantiate solver classes directly for advanced control (e.g., change `CSPSolver.force_mask`).
-- For more examples see `examples/optimized_csp.py`, `examples/optimized_lp.py`, and `examples/advanced_lp.py`.
+- For more examples see `examples/optimized_csp.py`, `examples/optimized_lp.py`.
 

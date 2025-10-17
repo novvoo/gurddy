@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gurddy"
-version = "0.1.3"
+version = "0.1.5"
 description = "Gurddy Python package."
 readme = "README.md"
 authors = [{ name = "novo", email = "novo.email@gmail.com" }]
