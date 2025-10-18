@@ -1,5 +1,5 @@
 ### Gurddy
-Gurddy is a lightweight Python package designed to model and solve Constraint Satisfaction Problems (CSP) and Linear Programming (LP) problems with ease. Built for researchers, engineers, and optimization enthusiasts, Gurddy provides a unified interface to define variables, constraints, and objectives—then leverages powerful solvers under the hood to deliver optimal or feasible solutions.
+Gurddy is a lightweight Python package designed to model and solve Constraint Satisfaction Problems (CSP), Linear Programming (LP), and Minimax optimization problems with ease. Built for researchers, engineers, and optimization enthusiasts, Gurddy provides a unified interface to define variables, constraints, and objectives—then leverages powerful solvers under the hood to deliver optimal or feasible solutions.
 
 ## Quick Start
 
@@ -80,9 +80,35 @@ Q . . .
 . . Q .
 ```
 
+### 🎮 Minimax Game Theory Example
+```python
+from gurddy.solver.minimax_solver import MinimaxSolver
+
+# Solve Rock-Paper-Scissors game
+payoff_matrix = [
+    [0, -1, 1],   # Rock vs [Rock, Paper, Scissors]
+    [1, 0, -1],   # Paper vs [Rock, Paper, Scissors]
+    [-1, 1, 0]    # Scissors vs [Rock, Paper, Scissors]
+]
+
+solver = MinimaxSolver(None)
+result = solver.solve_game_matrix(payoff_matrix, player="row")
+
+print(f"Optimal strategy: Rock={result['strategy'][0]:.2f}, "
+      f"Paper={result['strategy'][1]:.2f}, Scissors={result['strategy'][2]:.2f}")
+print(f"Game value: {result['value']:.2f}")
+```
+
+Output:
+```
+Optimal strategy: Rock=0.33, Paper=0.33, Scissors=0.33
+Game value: 0.00
+```
+
 Features
 - 🧩 CSP Support: Define discrete variables, domains, and logical constraints.
 - 📈 LP Support: Formulate linear objectives and inequality/equality constraints.
+- 🎮 Minimax Support: Solve game theory problems and robust optimization under uncertainty.
 - 🔌 Extensible Solver Backend: Integrates with industry-standard solvers (e.g., Gurobi, CBC, or GLPK via compatible interfaces).
 - 📦 Simple API: Intuitive syntax for rapid prototyping and experimentation.
 - 🧪 Type-Hinted & Tested: Robust codebase with unit tests and clear documentation.
@@ -140,6 +166,18 @@ Features
 - Shows PuLP integration
 - **Run**: `python examples/optimized_lp.py`
 
+## Minimax Examples
+
+#### **Game Theory & Robust Optimization** (`minimax.py`) ✨ **NEW**
+- **Zero-Sum Games**: Rock-Paper-Scissors, Matching Pennies, Battle of Sexes
+- **Portfolio Optimization**: Minimize maximum loss across market scenarios
+- **Production Planning**: Maximize minimum profit under demand uncertainty
+- **Security Games**: Optimal resource allocation against adversaries
+- **Advertising Competition**: Strategic budget allocation
+- **Mixed Strategy Equilibria**: Find optimal randomized strategies
+- **Robust Decision Making**: Handle worst-case scenarios
+- **Run**: `python examples/minimax.py`
+
 
 ## Quick Start Guide
 
@@ -158,6 +196,9 @@ python optimized_csp.py
 
 # Run LP examples
 python optimized_lp.py
+
+# Run Minimax examples
+python minimax.py
 ```
 
 ### Example Output Preview
@@ -203,7 +244,39 @@ Who owns the zebra? Ukrainian (House 5)
 Who drinks water? Japanese (House 2)
 ```
 
+#### Minimax Games
+```
+Rock-Paper-Scissors Game:
+Row Player (Maximizer) Strategy:
+  Rock:     0.3333
+  Paper:    0.3333
+  Scissors: 0.3333
+  Game Value: 0.0000
+
+✓ Optimal strategy: Play each move with equal probability (1/3)
+✓ Game value is 0 (fair game)
+
+Robust Portfolio Optimization:
+Optimal Allocation (minimize maximum loss):
+  Stock A: $12.28
+  Stock B: $0.00
+  Bond C:  $87.72
+  Total:   $100.00
+
+Worst-case loss: $1.93
+
+✓ Minimax strategy balances risk across all scenarios
+```
+
 ## 🆕 Recent Updates
+
+### Minimax Solver Addition ✨ **NEW**
+- **🎮 Game Theory Support**: Solve zero-sum games and find Nash equilibria
+- **🛡️ Robust Optimization**: Minimize maximum loss or maximize minimum gain
+- **📊 Mixed Strategies**: Compute optimal probability distributions for competitive scenarios
+- **💼 Real-World Applications**: Portfolio optimization, security games, competitive strategy
+- **🔧 Flexible API**: Support for game matrices, scenario-based decisions, and custom constraints
+- **⚡ Efficient Solving**: Linear programming based implementation using PuLP
 
 ### Logic Puzzles Solver Enhancement
 - **✅ Fixed CSP Solver**: Resolved constraint propagation issues in tuple-based solver
@@ -240,6 +313,12 @@ Who drinks water? Japanese (House 2)
 - **Key Techniques**: Objective optimization, constraint relaxation
 - **Files**: `optimized_lp.py`
 
+### 🎮 **Game Theory & Robust Optimization**
+- Zero-sum games, mixed strategies, Nash equilibria
+- Portfolio optimization, worst-case planning
+- **Key Techniques**: Minimax, maximin, robust optimization
+- **Files**: `minimax.py`
+
 ## Learning Path
 
 ### 🟢 **Beginner** (Start Here)
@@ -251,6 +330,10 @@ Who drinks water? Japanese (House 2)
 4. `map_coloring.py` - Real-world constraint modeling
 5. `scheduling.py` - Multi-constraint problems
 6. `optimized_lp.py` - Introduction to LP
+
+### 🔴 **Advanced**
+7. `minimax.py` - Game theory and robust optimization
+8. `logic_puzzles.py` - Complex CSP with advanced techniques
 
 
 ## Customization Tips
@@ -401,6 +484,33 @@ edges = [(0, 1), (1, 2), (2, 0)]
 solution = solve_graph_coloring(edges, 3, 3)
 ```
 
+Minimax Problem Types Supported
+-------------------------------
+
+Gurddy's Minimax solver handles game theory and robust optimization problems:
+
+### Problem Types
+- **Zero-Sum Games**: Two-player games where one player's gain equals the other's loss
+- **Mixed Strategy Equilibria**: Find optimal randomized strategies using linear programming
+- **Minimax Decision Problems**: Minimize maximum loss across uncertain scenarios
+- **Maximin Decision Problems**: Maximize minimum gain under worst-case conditions
+- **Robust Optimization**: Make decisions that perform well in all scenarios
+
+### Applications
+- **Game Theory**: Rock-Paper-Scissors, Matching Pennies, Battle of Sexes
+- **Portfolio Optimization**: Asset allocation minimizing worst-case loss
+- **Production Planning**: Robust production under demand uncertainty
+- **Security Games**: Resource allocation for defense against adversaries
+- **Competitive Strategy**: Advertising budgets, pricing strategies
+- **Risk Management**: Worst-case scenario planning
+
+### Key Features
+- **Linear Programming Based**: Uses PuLP for efficient solving
+- **Mixed Strategies**: Computes optimal probability distributions
+- **Game Value Computation**: Determines equilibrium payoffs
+- **Scenario Analysis**: Handles multiple uncertain scenarios
+- **Budget Constraints**: Supports resource allocation constraints
+
 CSP Problem Types Supported
 ---------------------------
 
@@ -457,6 +567,67 @@ sol = m.solve()
 print(sol)  # dict var name -> numeric value or None
 ```
 
+Usage — Minimax (example)
+-------------------------
+
+The Minimax solver handles game theory and robust optimization problems:
+
+### Zero-Sum Game Example
+
+```python
+from gurddy.solver.minimax_solver import MinimaxSolver
+
+# Rock-Paper-Scissors payoff matrix
+payoff_matrix = [
+    [0, -1, 1],   # Rock vs [Rock, Paper, Scissors]
+    [1, 0, -1],   # Paper vs [Rock, Paper, Scissors]
+    [-1, 1, 0]    # Scissors vs [Rock, Paper, Scissors]
+]
+
+solver = MinimaxSolver(None)
+
+# Find optimal mixed strategy for row player
+result = solver.solve_game_matrix(payoff_matrix, player="row")
+print(f"Optimal strategy: {result['strategy']}")  # [0.333, 0.333, 0.333]
+print(f"Game value: {result['value']}")  # 0.0 (fair game)
+```
+
+### Robust Optimization Example
+
+```python
+from gurddy.solver.minimax_solver import MinimaxSolver
+
+# Portfolio optimization: minimize maximum loss across scenarios
+scenarios = [
+    {"StockA": -0.2, "StockB": -0.1, "BondC": 0.05},  # Bull market
+    {"StockA": 0.3, "StockB": 0.2, "BondC": -0.02},   # Bear market
+    {"StockA": 0.05, "StockB": 0.03, "BondC": -0.01}  # Stable market
+]
+
+solver = MinimaxSolver(None)
+result = solver.solve_minimax_decision(scenarios, ["StockA", "StockB", "BondC"])
+
+print(f"Optimal allocation: {result['decision']}")
+print(f"Worst-case loss: {result['max_loss']}")
+```
+
+### Maximin Example
+
+```python
+# Production planning: maximize minimum profit
+scenarios = [
+    {"ProductX": -50, "ProductY": -40},  # High demand (negative for maximin)
+    {"ProductX": -30, "ProductY": -35},  # Medium demand
+    {"ProductX": -20, "ProductY": -25}   # Low demand
+]
+
+solver = MinimaxSolver(None)
+result = solver.solve_maximin_decision(scenarios, ["ProductX", "ProductY"])
+
+print(f"Optimal production: {result['decision']}")
+print(f"Guaranteed minimum profit: {result['min_gain']}")
+```
+
 Examples Gallery
 ----------------
 
@@ -473,6 +644,9 @@ Gurddy comes with comprehensive examples demonstrating various problem types:
 ### LP Examples  
 - **`examples/optimized_lp.py`** - LP relaxation vs MIP, timings, sensitivity analysis
 
+### Minimax Examples ✨ **NEW**
+- **`examples/minimax.py`** - Game theory, robust optimization, security games
+
 ### Running Examples
 
 ```bash
@@ -486,7 +660,9 @@ python examples/optimized_csp.py      # Sudoku solver
 
 # LP Examples  
 python examples/optimized_lp.py       # Production planning
-python examples/advanced_lp.py        # Advanced LP techniques
+
+# Minimax Examples
+python examples/minimax.py            # Game theory & robust optimization
 ```
 
 Problem-Specific Examples
@@ -637,7 +813,15 @@ Solvers
 	- LPSolver(model: Model)
 	- Methods: solve() -> Optional[Dict[str, float]]  (returns variable values mapping or None). Uses PuLP by default; requires `pulp` installed.
 
+- class MinimaxSolver ✨ **NEW**
+	- MinimaxSolver(model: Model)
+	- Methods:
+		- solve_game_matrix(payoff_matrix: List[List[float]], player: str) -> Dict  (solves zero-sum games)
+		- solve_minimax_decision(scenarios: List[Dict], variables: List[str]) -> Dict  (minimize maximum loss)
+		- solve_maximin_decision(scenarios: List[Dict], variables: List[str]) -> Dict  (maximize minimum gain)
+		- solve() -> Optional[Dict[str, float]]  (generic model-based solving)
+
 Notes
 - The API intentionally keeps model construction separate from solver execution. Use `Model.solve()` for convenience or instantiate solver classes directly for advanced control (e.g., change `CSPSolver.force_mask`).
-- For more examples see `examples/optimized_csp.py`, `examples/optimized_lp.py`.
+- For more examples see `examples/optimized_csp.py`, `examples/optimized_lp.py`, `examples/minimax.py`.
 
