@@ -41,6 +41,12 @@ class Model:
         elif self.problem_type == "LP":
             from .solver.lp_solver import LPSolver
             self.solver = LPSolver(self)
+        elif self.problem_type == "SCIPY":
+            try:
+                from .solver.scipy_solver import ScipySolver
+                self.solver = ScipySolver(self)
+            except ImportError:
+                raise ImportError("SciPy is required for SCIPY problem type. Install with: pip install scipy")
         else:
             raise ValueError("Unsupported problem type.")
         return self.solver.solve()

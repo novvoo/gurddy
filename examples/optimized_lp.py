@@ -6,6 +6,9 @@ This example demonstrates:
 2. Multi-objective optimization
 3. Constraint relaxation analysis
 4. Performance comparison between different problem formulations
+
+Note: For advanced nonlinear optimization with SciPy integration,
+see scipy_optimization.py
 """
 
 import time

@@ -105,10 +105,32 @@ Optimal strategy: Rock=0.33, Paper=0.33, Scissors=0.33
 Game value: 0.00
 ```
 
+### 🎯 Classic Problems Example
+```python
+import gurddy
+
+# Solve chicken-rabbit problem (鸡兔同笼)
+model = gurddy.Model("ChickenRabbit", "LP")
+
+chickens = model.addVar("chickens", low_bound=0, cat='Integer')
+rabbits = model.addVar("rabbits", low_bound=0, cat='Integer')
+
+# 35 heads, 94 legs
+model.addConstraint(chickens + rabbits == 35)        # heads constraint
+model.addConstraint(chickens * 2 + rabbits * 4 == 94)  # legs constraint
+
+model.setObjective(chickens + rabbits, sense='Minimize')
+solution = model.solve()
+
+print(f"Chickens: {solution['chickens']}, Rabbits: {solution['rabbits']}")
+# Output: Chickens: 23, Rabbits: 12
+```
+
 Features
 - 🧩 CSP Support: Define discrete variables, domains, and logical constraints.
 - 📈 LP Support: Formulate linear objectives and inequality/equality constraints.
 - 🎮 Minimax Support: Solve game theory problems and robust optimization under uncertainty.
+- 🔬 SciPy Integration: Advanced nonlinear optimization, statistical modeling, and signal processing.
 - 🔌 Extensible Solver Backend: Integrates with industry-standard solvers (e.g., Gurobi, CBC, or GLPK via compatible interfaces).
 - 📦 Simple API: Intuitive syntax for rapid prototyping and experimentation.
 - 🧪 Type-Hinted & Tested: Robust codebase with unit tests and clear documentation.
@@ -166,6 +188,16 @@ Features
 - Shows PuLP integration
 - **Run**: `python examples/optimized_lp.py`
 
+## SciPy Integration Examples ✨ **NEW**
+
+#### **Advanced Nonlinear Optimization** (`scipy_optimization.py`)
+- **Nonlinear Portfolio Optimization**: Quadratic risk models with Sharpe ratio maximization
+- **Statistical Parameter Estimation**: Constrained maximum likelihood estimation
+- **Signal Processing**: FIR filter design with frequency response optimization
+- **Hybrid CSP-SciPy**: Discrete facility location with continuous capacity optimization
+- **Numerical Integration**: Distribution parameter fitting with quantile matching
+- **Run**: `python examples/scipy_optimization.py`
+
 ## Minimax Examples
 
 #### **Game Theory & Robust Optimization** (`minimax.py`) ✨ **NEW**
@@ -199,6 +231,9 @@ python optimized_lp.py
 
 # Run Minimax examples
 python minimax.py
+
+# Run SciPy integration examples
+python scipy_optimization.py
 ```
 
 ### Example Output Preview
@@ -270,6 +305,15 @@ Worst-case loss: $1.93
 
 ## 🆕 Recent Updates
 
+### SciPy Integration Addition ✨ **NEW**
+- **🔬 Nonlinear Optimization**: Advanced portfolio optimization with quadratic risk models
+- **📊 Statistical Modeling**: Constrained parameter estimation and distribution fitting
+- **🎛️ Signal Processing**: FIR filter design and frequency response optimization
+- **🔄 Hybrid Approaches**: Combine discrete CSP decisions with continuous SciPy optimization
+- **🧮 Numerical Integration**: Optimization objectives involving numerical integration
+- **⚡ Seamless Integration**: All SciPy functionality accessible through `import gurddy` only
+- **🎯 Unified API**: No need to import scipy, numpy, or other dependencies directly
+
 ### Minimax Solver Addition ✨ **NEW**
 - **🎮 Game Theory Support**: Solve zero-sum games and find Nash equilibria
 - **🛡️ Robust Optimization**: Minimize maximum loss or maximize minimum gain
@@ -319,6 +363,18 @@ Worst-case loss: $1.93
 - **Key Techniques**: Minimax, maximin, robust optimization
 - **Files**: `minimax.py`
 
+### 🔬 **Advanced Nonlinear Optimization**
+- Nonlinear portfolio optimization, statistical estimation
+- Signal processing, hybrid discrete-continuous problems
+- **Key Techniques**: SciPy integration, numerical optimization
+- **Files**: `scipy_optimization.py`
+
+### 🎯 **Classic Mathematical Problems**
+- 二十四点游戏 (24-point game), 鸡兔同笼 (chicken-rabbit problem)
+- 数独 (Sudoku), N皇后 (N-Queens), 背包问题 (knapsack problem)
+- **Key Techniques**: CSP modeling, linear programming, combinatorial optimization
+- **Files**: `classic_problems.py`
+
 ## Learning Path
 
 ### 🟢 **Beginner** (Start Here)
@@ -334,6 +390,11 @@ Worst-case loss: $1.93
 ### 🔴 **Advanced**
 7. `minimax.py` - Game theory and robust optimization
 8. `logic_puzzles.py` - Complex CSP with advanced techniques
+9. `scipy_optimization.py` - Nonlinear optimization and SciPy integration
+
+### 🎯 **Classic Problems**
+10. `classic_problems.py` - 经典数学问题：二十四点、鸡兔同笼、数独等
+
 
 
 ## Customization Tips
@@ -383,6 +444,20 @@ For LP/MIP examples you also need PuLP (the LP backend used by the built-in `LPS
 ```powershell
 pip install pulp
 ```
+
+For SciPy integration examples you also need SciPy:
+
+```powershell
+pip install scipy
+```
+
+Or install with optional dependencies:
+
+```powershell
+pip install gurddy[scipy]  # Includes SciPy
+```
+
+**Note**: Once installed, all SciPy functionality is accessible through `import gurddy` only - no need to import scipy directly!
 
 If you publish optional extras you may use something like `pip install gurddy[lp]` if configured; otherwise install `pulp` separately as shown above.
 
@@ -647,6 +722,13 @@ Gurddy comes with comprehensive examples demonstrating various problem types:
 ### Minimax Examples ✨ **NEW**
 - **`examples/minimax.py`** - Game theory, robust optimization, security games
 
+### SciPy Integration Examples ✨ **NEW**
+- **`examples/scipy_optimization.py`** - Nonlinear optimization, statistical modeling, signal processing
+
+### Classic Problems Examples ✨ **NEW**
+- **`examples/classic_problems.py`** - 二十四点游戏, 鸡兔同笼, 数独, N皇后, 背包问题
+- **`examples/simple_classic_problems.py`** - 简化版二十四点和鸡兔同笼问题
+
 ### Running Examples
 
 ```bash
@@ -663,6 +745,12 @@ python examples/optimized_lp.py       # Production planning
 
 # Minimax Examples
 python examples/minimax.py            # Game theory & robust optimization
+
+# SciPy Integration Examples
+python examples/scipy_optimization.py # Nonlinear optimization & SciPy integration
+
+# Classic Problems Examples
+python examples/classic_problems.py        # 经典数学问题合集
 ```
 
 Problem-Specific Examples
@@ -820,6 +908,56 @@ Solvers
 		- solve_minimax_decision(scenarios: List[Dict], variables: List[str]) -> Dict  (minimize maximum loss)
 		- solve_maximin_decision(scenarios: List[Dict], variables: List[str]) -> Dict  (maximize minimum gain)
 		- solve() -> Optional[Dict[str, float]]  (generic model-based solving)
+
+SciPy Integration
+- - -
+Gurddy seamlessly integrates SciPy functionality through a unified API. **No need to import scipy directly!**
+
+**Key Features:**
+- **Hybrid Optimization**: Combine discrete CSP decisions with continuous SciPy optimization
+- **Nonlinear Portfolio Optimization**: Maximize Sharpe ratio with quadratic risk models
+- **Statistical Modeling**: Constrained parameter estimation and distribution fitting
+- **Signal Processing**: FIR filter design and frequency response optimization
+- **Numerical Integration**: Advanced optimization with numerical integration
+
+**Simple Usage Examples:**
+```python
+import gurddy  # Only import needed!
+import numpy as np
+
+# Portfolio optimization
+returns = np.array([0.12, 0.15, 0.10])
+cov_matrix = np.array([[0.04, 0.01, 0.02], [0.01, 0.05, 0.01], [0.02, 0.01, 0.03]])
+result = gurddy.optimize_portfolio(returns, cov_matrix)
+
+# Distribution fitting
+data = np.random.gamma(2.0, 1.5, size=100)
+result = gurddy.fit_distribution(data, distribution='gamma')
+
+# Filter design
+result = gurddy.design_filter(num_taps=21, cutoff_freq=100, sampling_freq=1000)
+
+# Nonlinear optimization
+result = gurddy.solve_nonlinear(lambda x: (x[0]-1)**2 + (x[1]-2)**2, x0=[0, 0])
+```
+
+**Hybrid CSP-SciPy Pattern:**
+```python
+import gurddy
+
+# Step 1: Discrete decisions with CSP
+model = gurddy.Model("Facility", "CSP")
+facilities = [model.addVar(f"f_{i}", domain=[0, 1]) for i in range(3)]
+model.addConstraint(gurddy.FunctionConstraint(lambda *f: sum(f) <= 2, facilities))
+discrete_solution = model.solve()
+
+# Step 2: Continuous optimization with SciPy integration
+def continuous_objective(x_continuous, discrete_solution):
+    return sum(x_continuous[i] * discrete_solution[f"f_{i}"] for i in range(len(x_continuous)))
+
+solver = gurddy.ScipySolver()
+result = solver.solve_hybrid_problem(model, continuous_objective, ["cap_0", "cap_1", "cap_2"])
+```
 
 Notes
 - The API intentionally keeps model construction separate from solver execution. Use `Model.solve()` for convenience or instantiate solver classes directly for advanced control (e.g., change `CSPSolver.force_mask`).

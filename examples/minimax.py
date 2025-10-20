@@ -7,6 +7,9 @@ This module demonstrates various minimax optimization problems:
 3. Robust optimization (worst-case scenario planning)
 4. Competitive facility location
 5. Security games (attacker-defender scenarios)
+
+Note: For nonlinear minimax problems and SciPy integration,
+see scipy_optimization.py
 """
 
 import sys
